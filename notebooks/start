@@ -1,0 +1,3 @@
+#!/bin/bash
+# Starts the iPython browser
+ipython notebook --no-browser

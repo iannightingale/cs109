@@ -1,0 +1,182 @@
+<html>
+<head>
+</head>
+<script src="js/gsv.js" type="text/javascript"></script>
+<script src="js/behaviour.js" type="text/javascript"></script>
+<style type="text/css" title="text/css">
+   <!--
+       body
+       {
+           color: black;
+           background-color: white;
+           font-family: helvetica, arial, sans-serif;
+       }
+       
+       .imageViewer
+       {
+           position: relative;
+           top: 0;
+           left: 0;
+           width: 500px;
+           height: 500px;
+       }
+       
+       .imageViewer .well, .imageViewer .surface
+       {
+           margin: 0;
+           padding: 0;
+           width: 100%;
+           height: 100%;
+           position: absolute;
+           top: 0px;
+           left: 0px;
+           cursor: default;
+           border: 1px solid black;
+       }
+       
+       .imageViewer .well
+       {
+           background-color: white;
+           overflow: hidden;
+       }
+       
+       .imageViewer .surface        
+       {
+           background-color: transparent;
+           background-image: url("center.gif");
+           background-repeat: no-repeat;
+           background-position: center center;
+       }
+       
+       .imageViewer .status
+       {
+           margin: 0;
+           padding: 0;
+           position: absolute;
+           top: 480px;
+           left: 0px;
+           display: none;
+       }
+       
+           .imageViewer .well .tile
+           {
+               border: 0;
+               margin: 0;
+               padding: 0;
+               position: absolute;
+               top: 0px;
+               left: 0px;
+               display: block;
+           }
+           
+       .imageViewer .zoom        
+       {
+           background-color: white;
+           position: absolute;
+           top: 475px;
+           left: 460px;
+           width: 30px;
+           height: 20px;
+           margin: 0;
+           padding: 0 0 0 4px;
+           font-size: 20px;
+           line-height: 20px;
+           font-weight: bold;
+           border-left: 1px solid black;
+           border-top: 1px solid black;
+       }
+       
+           .imageViewer .zoom a
+           {
+               text-decoration: none;
+           }
+       
+           .imageViewer .zoom .dump
+           {
+               font-size: 16px;
+           }
+       
+       h1, .description
+       {
+           margin-left: 100px;
+           width: 400px;
+       }
+       
+       h1
+       {
+           margin-top: 40px;
+       }
+       
+           h1 em
+           {
+               font-size: 50%;
+               color: gray;
+           }
+       
+   -->
+   </style>
+<script>	
+Behaviour.register({
+ '.imageViewer' : function(el) {
+     prepareViewer(el, 'tiles', 256);
+     
+     var MouseWheelHandler = function(e) {
+     		// cross-browser wheel delta
+     		var e = window.event || e;
+     		var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
+     	    if(delta > 0){
+     	        zoomImageUp(el, undefined);
+     	    }
+     	    else if(delta < 0){
+     	        zoomImageDown(el, undefined);
+     	    }
+
+     		return false;
+     }
+     
+     
+     el.ondblclick = function() {
+            zoomImageUp(el, undefined);
+            return false;
+        }
+        
+    if (el.addEventListener) {
+    	el.addEventListener("mousewheel", MouseWheelHandler, false);
+    	el.addEventListener("DOMMouseScroll", MouseWheelHandler, false);
+    }
+    else el.attachEvent("onmousewheel", MouseWheelHandler);
+        
+ },
+ '.imageViewer .zoom .up' : function(el) {
+     el.onclick = function() {
+         zoomImageUp(el.parentNode.parentNode, undefined);
+         return false;
+     }
+ },
+ '.imageViewer .zoom .down' : function(el) {
+     el.onclick = function() {
+         zoomImageDown(el.parentNode.parentNode, undefined);
+         return false;
+     }
+ },
+ '.imageViewer .zoom .dump' : function(el) {
+     el.onclick = function() {
+         dumpInfo(el.parentNode.parentNode);
+         return false;
+     }
+ }
+ 
+});
+</script>
+<body>
+    <div class="imageViewer">
+          <div class="well"> </div>
+          <div class="surface"> </div>
+          <p class="status"> </p>
+          <p class="zoom">
+              <a class="up" href="#">+</a>
+              <a class="down" href="#">-</a>
+          </p>
+      </div>
+</body>
+</html>
